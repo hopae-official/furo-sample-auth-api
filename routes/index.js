@@ -20,15 +20,19 @@ router.get('/sign', function (req, res, next) {
 
 router.get('/verify', function (req, res, next) {
   var raw = req.header('authorization');
-  if (!raw) next({ status: 401, message: 'empty authorization in header' });
+  if (!raw)
+    return next({ status: 401, message: 'empty authorization in header' });
   if (!raw.startsWith('Bearer '))
-    next({ status: 401, message: 'authrorization token must be bearer token' });
+    return next({
+      status: 401,
+      message: 'authrorization token must be bearer token',
+    });
   var token = raw.split(' ')[1];
 
   jwt.verify(token, config.PRIVATE_KEY, function (err, decoded) {
     if (err) {
       // https://github.com/auth0/node-jsonwebtoken#errors--codes
-      next({ message: 'jwt verify failed' });
+      next({ message: `jwt verify failed - [${err.name}] ${err.message}` });
     }
     res.json(decoded);
   });
