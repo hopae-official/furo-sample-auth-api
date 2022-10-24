@@ -13,6 +13,7 @@ router.get('/sign', function (req, res, next) {
   var options = req.body.options;
   if (!payload) payload = {};
   if (!options) options = {};
+  // https://github.com/auth0/node-jsonwebtoken#jwtsignpayload-secretorprivatekey-options-callback
   var token = jwt.sign(payload, config.PRIVATE_KEY, options);
   res.send(token);
 });
@@ -26,6 +27,7 @@ router.get('/verify', function (req, res, next) {
 
   jwt.verify(token, config.PRIVATE_KEY, function (err, decoded) {
     if (err) {
+      // https://github.com/auth0/node-jsonwebtoken#errors--codes
       next({ message: 'jwt verify failed' });
     }
     res.json(decoded);
