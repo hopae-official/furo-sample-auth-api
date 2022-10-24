@@ -17,4 +17,19 @@ router.get('/sign', function (req, res, next) {
   res.send(token);
 });
 
+router.get('/verify', function (req, res, next) {
+  var raw = req.header('authorization');
+  if (!raw) next({ status: 401, message: 'empty authorization in header' });
+  if (!raw.startsWith('Bearer '))
+    next({ status: 401, message: 'authrorization token must be bearer token' });
+  var token = raw.split(' ')[1];
+
+  jwt.verify(token, config.PRIVATE_KEY, function (err, decoded) {
+    if (err) {
+      next({ message: 'jwt verify failed' });
+    }
+    res.json(decoded);
+  });
+});
+
 module.exports = router;
