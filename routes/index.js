@@ -8,7 +8,7 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/sign', function (req, res, next) {
+router.post('/sign', function (req, res, next) {
   var payload = req.body.payload;
   var options = req.body.options;
   if (!payload) payload = {};
